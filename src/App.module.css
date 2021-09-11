@@ -1,10 +1,9 @@
+.wrapper {
+  margin: auto;
+  overflow: auto;
+  position: relative;
+  will-change: transform;
+  direction: ltr;
+}
 
-.wrapper{
-  height:500px;
-  margin: auto;
-  overflow-y: scroll;
-}
-.container{
-  width: 100px;
-  margin: auto;
-}
+.container {}
