@@ -1,5 +1,7 @@
-.App{
-  height: 100vh;
+
+.wrapper{
+  height:500px;
+  margin: auto;
   overflow-y: scroll;
 }
 .container{

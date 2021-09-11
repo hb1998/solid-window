@@ -1,30 +1,18 @@
 import { Component, createSignal, For } from "solid-js";
+import ListRenderer from "./components/ListRenderer";
 
-import styles from "./App.module.css";
 
-const listData =  new Array(1000).fill(null).map((_,index)=>({
-  name:`Label-${index}`,
-  height:30
+const listData = new Array(1000).fill(null).map((_, index) => ({
+  name: `Label-${index}`,
+  height: 50
 }))
 
-const App: Component = () => {
-  const [list, setList] = createSignal(listData);
-  const [window, setWindow] = createSignal([1,10]);
-  const calculatedHeight = listData.length * 30;
 
-  const [startIdx,endIdx] = window();
-  const renderedList = list().slice(startIdx,endIdx)
+const App: Component = () => {
+
   return (
-    <div class={styles.App} >
-      <div style={{
-        "min-height":`${calculatedHeight}px`
-      }} className={styles.container}>
-      <For each={renderedList} fallback={<div>Loading...</div>}>
-      {(item) => <div>{item.name}</div>}
-      </For>
-      </div>
-    </div>
-  );
+    <ListRenderer height={500} width={500} itemCount={200} itemSize={20} />
+  )
 };
 
 export default App;
