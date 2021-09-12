@@ -1,18 +1,19 @@
-import { Component, createSignal, For } from "solid-js";
-import ListRenderer from "./components/ListRenderer";
+import { Component } from "solid-js";
+import FixedListRenderer, { ItemProps } from "./components/FixedListRenderer";
 
-const listData = new Array(1000).fill(null).map((_, index) => ({
-  name: `Label-${index}`,
-  height: 50,
-}));
+const Row: Component<any> = ({ rowIndex, style }) => (
+  <div style={style}>Row {rowIndex}</div>
+);
 
 const App: Component = () => {
   return (
-    <ListRenderer
+    <FixedListRenderer
       height={500}
       width={100}
       itemCount={200}
-      itemSize={20} />
+      itemSize={20}
+      renderer={Row}
+    ></FixedListRenderer>
   );
 };
 

@@ -7,9 +7,10 @@ interface ListRendererProps {
   itemSize: number;
   width: number;
   overscanCount?: number;
+  renderer: Component<ItemProps>;
 }
 
-interface ItemProps {
+export interface ItemProps {
   rowIndex: number;
   style: JSX.CSSProperties;
 }
@@ -20,25 +21,24 @@ const ListRenderer: Component<ListRendererProps> = ({
   itemCount,
   itemSize,
   width,
+  renderer: Renderer,
   overscanCount = 5,
 }) => {
-  const initialWindowSize = Math.ceil(height / itemSize);
+  const windowSize = Math.ceil(height / itemSize);
 
-  const [window, setWindow] = createSignal<TWindow>([0, initialWindowSize]);
+  //   const [window, setWindow] = createSignal<TWindow>([0, initialWindowSize]);
   const [scrollState, setScrollState] = createSignal(0);
 
   const [list, setList] = createSignal([]);
   let gridContainerRef: HTMLDivElement;
 
   createEffect(() => {
+    const window: TWindow = getWindowSize(scrollState(), windowSize, itemSize);
     const windowItems = getWindowItems({
-      width,
-      window: window(),
+      window,
       overscanCount,
-      height,
       itemCount,
       itemSize,
-      scrollState: scrollState(),
     });
     setList(windowItems);
   });
@@ -46,7 +46,6 @@ const ListRenderer: Component<ListRendererProps> = ({
   const handleScroll: JSX.EventHandlerUnion<HTMLDivElement, UIEvent> = (
     event
   ) => {
-    event.preventDefault();
     setScrollState(event.target.scrollTop);
   };
 
@@ -66,7 +65,7 @@ const ListRenderer: Component<ListRendererProps> = ({
         }}
       >
         <For each={list()} fallback={<div>Loading...</div>}>
-          {(item) => <div style={item.style}>{item.rowIndex}</div>}
+          {Renderer}
         </For>
       </div>
     </div>
@@ -75,20 +74,14 @@ const ListRenderer: Component<ListRendererProps> = ({
 
 function getWindowItems({
   window,
-  width,
-  height,
   itemSize,
   overscanCount,
   itemCount,
-  scrollState,
 }: {
-  width: number;
-  height: number;
   itemSize: number;
   window: [number, number];
   overscanCount: number;
   itemCount: number;
-  scrollState: number;
 }) {
   const items: ItemProps[] = [];
   const startIndex = Math.max(0, window[0] - overscanCount);
@@ -99,11 +92,20 @@ function getWindowItems({
       style: {
         height: wrapPx(itemSize),
         position: "absolute",
-        top: wrapPx((index + 1) * 20),
+        top: wrapPx((index + 1) * itemSize),
       },
     } as ItemProps);
   }
   return items;
+}
+
+function getWindowSize(
+  scrollState: number,
+  windowSize: number,
+  itemSize: number
+): TWindow {
+  const startIndex = Math.floor(scrollState / itemSize);
+  return [startIndex, startIndex + windowSize];
 }
 
 function wrapPx(length: number) {
