@@ -1,8 +1,22 @@
 import { Component, createEffect, createSignal, For, JSX } from "solid-js";
 import styles from "../App.module.css";
-import { ItemProps, ListRendererProps, TWindow } from "../types/Render.types";
 
-const ListRenderer: Component<ListRendererProps> = ({
+interface ListRendererProps {
+  height: number;
+  itemCount: number;
+  itemSize: number;
+  width: number;
+  overscanCount?: number;
+  renderer: Component<ItemProps>;
+}
+
+export interface ItemProps {
+  rowIndex: number;
+  style: JSX.CSSProperties;
+}
+type TWindow = [number, number];
+
+const VariableListRenderer: Component<ListRendererProps> = ({
   height,
   itemCount,
   itemSize,
@@ -18,7 +32,7 @@ const ListRenderer: Component<ListRendererProps> = ({
   let gridContainerRef: HTMLDivElement;
 
   createEffect(() => {
-    const window = getWindowSize(scrollState(), windowSize, itemSize);
+    const window: TWindow = getWindowSize(scrollState(), windowSize, itemSize);
     const windowItems = getWindowItems({
       window,
       overscanCount,
@@ -96,4 +110,4 @@ function getWindowSize(
 function wrapPx(length: number) {
   return `${length}px`;
 }
-export default ListRenderer;
+export default VariableListRenderer;

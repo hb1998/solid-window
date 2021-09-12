@@ -1,7 +1,8 @@
 import { Component } from "solid-js";
-import FixedListRenderer, { ItemProps } from "./components/FixedListRenderer";
+import FixedListRenderer from "./components/FixedListRenderer";
+import { ItemProps } from "./types/Render.types";
 
-const Row: Component<any> = ({ rowIndex, style }) => (
+const Row: Component<ItemProps> = ({ rowIndex, style }) => (
   <div style={style}>Row {rowIndex}</div>
 );
 
