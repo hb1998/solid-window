@@ -1,6 +1,10 @@
 import { Component, createEffect, createSignal, For, JSX } from "solid-js";
 import styles from "../App.module.css";
-import { TWindow, VariableListRendererProps } from "../types/Render.types";
+import {
+  TItemSizeMetadata,
+  TWindow,
+  VariableListRendererProps,
+} from "../types/Render.types";
 import Utils from "../utils";
 
 const VariableListRenderer: Component<VariableListRendererProps> = ({
@@ -14,9 +18,10 @@ const VariableListRenderer: Component<VariableListRendererProps> = ({
   const [scrollState, setScrollState] = createSignal(0);
 
   const [list, setList] = createSignal([]);
-
+  const rowHeightMeta: TItemSizeMetadata = new Map();
+  
   createEffect(() => {
-    const window = Utils.getWindowSize(scrollState(), windowSize, itemSize);
+    const window = Utils.getVariableWindowSize(scrollState(), itemSize);
     const windowItems = Utils.getWindowItems({
       window,
       overscanCount,

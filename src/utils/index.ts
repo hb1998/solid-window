@@ -1,4 +1,4 @@
-import { ItemProps, TWindow } from './../types/Render.types';
+import { ItemProps, TItemSizeMetadata, TWindow } from './../types/Render.types';
 export default class Utils {
 
   static getWindowSize(
@@ -41,4 +41,67 @@ export default class Utils {
     }
     return items;
   }
+
+  static getVariableWindowSize({
+    scrollState,
+    windowSize,
+    itemSize,
+    rowHeightMeta
+  }: {
+    scrollState: number,
+    windowSize: number,
+    itemSize: () => number,
+    height: number,
+    rowHeightMeta: TItemSizeMetadata
+  }): TWindow {
+
+    const startIndex = this.getWindowStartIndex({
+
+    });
+
+  }
+
+  static getWindowLastIndex({
+    startIndex,
+    containerHeight,
+    itemSize,
+    rowHeightMeta
+  }: {
+    startIndex: number;
+    containerHeight: number;
+    itemSize: (index: number) => number,
+    rowHeightMeta: TItemSizeMetadata
+
+  }) {
+    let runningHeight = 0;
+    let index = startIndex;
+    let initialTop = rowHeightMeta.get(startIndex).top || 0;
+    while (runningHeight > containerHeight) {
+      const rowHeight = itemSize(index);
+      rowHeightMeta.set(index, {
+        height: rowHeight,
+        top: initialTop + runningHeight + rowHeight
+      })
+      index += 1;
+      runningHeight += rowHeight;
+    }
+
+  }
+
+  static getWindowStartIndex({
+    rowHeightMeta,
+    scrollState
+  }: {
+    scrollState: number,
+    rowHeightMeta: TItemSizeMetadata
+  }) {
+
+    const lastVisitedRow = rowHeightMeta.get(rowHeightMeta.size);
+    for (const [index, rowHeight] of rowHeightMeta) {
+      if (rowHeight.) 
+    }
+
+  }
+
+
 }

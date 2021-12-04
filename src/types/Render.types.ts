@@ -19,3 +19,10 @@ export interface ItemProps {
 }
 
 export type TWindow = [number, number];
+
+export type TItemSizeMetadata = Map<
+    number,
+    {
+        height: number;
+        top?: number;
+    }>
