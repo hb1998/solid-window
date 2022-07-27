@@ -1,10 +1,13 @@
 import { Component, JSX } from "solid-js";
 
-export interface ListRendererProps {
+
+interface RendererProps {
     height: number;
     width: number;
     overscanCount?: number;
     renderer: Component<ItemProps>;
+}
+export interface ListRendererProps extends RendererProps {
     itemCount: number;
     itemSize: number;
 }

@@ -47,7 +47,6 @@ const VariableListRenderer: Component<VariableListRendererProps> = ({
       class={styles.wrapper}
     >
       <div
-        ref={gridContainerRef}
         style={{
           "min-height": Utils.wrapPx(itemSize * itemCount),
         }}

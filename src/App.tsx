@@ -15,20 +15,20 @@ const getItemSize = (index) => rowHeights[index];
 
 const App: Component = () => {
   return (
-    // <FixedListRenderer
-    //   height={500}
-    //   width={100}
-    //   itemCount={200}
-    //   itemSize={20}
-    //   renderer={Row}
-    // ></FixedListRenderer>
-    <VariableListRenderer
+    <FixedListRenderer
       height={500}
       width={100}
-      itemCount={1000}
-      itemSize={getItemSize}
+      itemCount={200}
+      itemSize={20}
       renderer={Row}
-    ></VariableListRenderer>
+    ></FixedListRenderer>
+    // <VariableListRenderer
+    //   height={500}
+    //   width={100}
+    //   itemCount={1000}
+    //   itemSize={getItemSize}
+    //   renderer={Row}
+    // ></VariableListRenderer>
   );
 };
 

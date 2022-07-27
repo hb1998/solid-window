@@ -98,7 +98,7 @@ export default class Utils {
 
     const lastVisitedRow = rowHeightMeta.get(rowHeightMeta.size);
     for (const [index, rowHeight] of rowHeightMeta) {
-      if (rowHeight.) 
+      if (rowHeight) return null
     }
 
   }

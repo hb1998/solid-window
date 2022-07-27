@@ -3,7 +3,7 @@ import styles from "../App.module.css";
 import { ListRendererProps } from "../types/Render.types";
 import Utils from "../utils";
 
-const ListRenderer: Component<ListRendererProps> = ({
+const FixedListRenderer: Component<ListRendererProps> = ({
   height,
   itemCount,
   itemSize,
@@ -56,4 +56,4 @@ const ListRenderer: Component<ListRendererProps> = ({
   );
 };
 
-export default ListRenderer;
+export default FixedListRenderer;
