@@ -1,6 +1,9 @@
-import { ItemProps, TItemSizeMetadata, TWindow } from './../types/Render.types';
+import {
+  ListItemProps,
+  TItemSizeMetadata,
+  TWindow,
+} from "./../types/Render.types";
 export default class Utils {
-
   static getWindowSize(
     scrollState: number,
     windowSize: number,
@@ -19,25 +22,28 @@ export default class Utils {
     itemSize,
     overscanCount,
     itemCount,
+    getItem,
   }: {
     itemSize: number;
     window: [number, number];
     overscanCount: number;
     itemCount: number;
+    getItem: (index: number, itemSize: number) => any;
   }) {
-    const items: ItemProps[] = [];
+    const items: ListItemProps[] = [];
     const startIndex = Math.max(0, window[0] - overscanCount);
     const endIndex = Math.min(window[1] + overscanCount, itemCount);
     for (let index = startIndex; index < endIndex; index++) {
-      items.push({
-        rowIndex: index,
-        style: {
-          height: Utils.wrapPx(itemSize),
-          width: "100%",
-          position: "absolute",
-          top: Utils.wrapPx((index + 1) * itemSize),
-        },
-      } as ItemProps);
+      // items.push({
+      //   rowIndex: index,
+      //   style: {
+      //     height: Utils.wrapPx(itemSize),
+      //     width: "100%",
+      //     position: "absolute",
+      //     top: Utils.wrapPx((index + 1) * itemSize),
+      //   },
+      // } as ListItemProps);
+      items.push(getItem(index, itemSize));
     }
     return items;
   }
@@ -46,32 +52,28 @@ export default class Utils {
     scrollState,
     windowSize,
     itemSize,
-    rowHeightMeta
+    rowHeightMeta,
   }: {
-    scrollState: number,
-    windowSize: number,
-    itemSize: () => number,
-    height: number,
-    rowHeightMeta: TItemSizeMetadata
+    scrollState: number;
+    windowSize: number;
+    itemSize: () => number;
+    height: number;
+    rowHeightMeta: TItemSizeMetadata;
   }): TWindow {
-
-    const startIndex = this.getWindowStartIndex({
-
-    });
-
+    const startIndex = this.getWindowStartIndex(null);
+    return null
   }
 
   static getWindowLastIndex({
     startIndex,
     containerHeight,
     itemSize,
-    rowHeightMeta
+    rowHeightMeta,
   }: {
     startIndex: number;
     containerHeight: number;
-    itemSize: (index: number) => number,
-    rowHeightMeta: TItemSizeMetadata
-
+    itemSize: (index: number) => number;
+    rowHeightMeta: TItemSizeMetadata;
   }) {
     let runningHeight = 0;
     let index = startIndex;
@@ -80,28 +82,23 @@ export default class Utils {
       const rowHeight = itemSize(index);
       rowHeightMeta.set(index, {
         height: rowHeight,
-        top: initialTop + runningHeight + rowHeight
-      })
+        top: initialTop + runningHeight + rowHeight,
+      });
       index += 1;
       runningHeight += rowHeight;
     }
-
   }
 
   static getWindowStartIndex({
     rowHeightMeta,
-    scrollState
+    scrollState,
   }: {
-    scrollState: number,
-    rowHeightMeta: TItemSizeMetadata
+    scrollState: number;
+    rowHeightMeta: TItemSizeMetadata;
   }) {
-
     const lastVisitedRow = rowHeightMeta.get(rowHeightMeta.size);
     for (const [index, rowHeight] of rowHeightMeta) {
-      if (rowHeight) return null
+      if (rowHeight) return null;
     }
-
   }
-
-
 }

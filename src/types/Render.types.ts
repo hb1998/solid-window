@@ -1,23 +1,36 @@
 import { Component, JSX } from "solid-js";
 
 
-interface RendererProps {
+interface RendererProps<T> {
     height: number;
     width: number;
     overscanCount?: number;
-    renderer: Component<ItemProps>;
+    renderer: Component<T>;
 }
-export interface ListRendererProps extends RendererProps {
+export interface ListRendererProps extends RendererProps<ListItemProps> {
     itemCount: number;
-    itemSize: number;
+    rowCount: number;
+}
+
+export interface GridRendererProps extends RendererProps<GridItemProps> {
+    rowCount: number;
+    rowSize: number;
+    columnCount: number;
+    columnSize: number;
 }
 
 export interface VariableListRendererProps extends Omit<ListRendererProps, "itemSize"> {
     itemSize: (index: number) => number
 }
 
-export interface ItemProps {
+export interface ListItemProps {
     rowIndex: number;
+    style: JSX.CSSProperties;
+}
+
+export interface GridItemProps {
+    rowIndex: number;
+    columnIndex: number;
     style: JSX.CSSProperties;
 }
 
