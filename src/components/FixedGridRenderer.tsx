@@ -1,37 +1,74 @@
 import { Component, createEffect, createSignal, For, JSX } from "solid-js";
 import styles from "../App.module.css";
-import { ListRendererProps } from "../types/Render.types";
+import { GridItemProps, GridRendererProps, ListItemProps, ListRendererProps } from "../types/Render.types";
 import Utils from "../utils";
 
-const FixedGridRenderer: Component<ListRendererProps> = ({
+const FixedGridRenderer: Component<GridRendererProps> = ({
   height,
-  itemCount,
-  itemSize,
+  rowCount,
+  rowSize,
+  columnCount,
+  columnSize,
   width,
   renderer: Renderer,
   overscanCount = 1,
 }) => {
-  const windowSize = Math.ceil(height / itemSize);
+  const rowWindowSize = Math.ceil(width / rowSize);
+  const colWindowSize = Math.ceil(width / columnSize);
 
-  const [scrollState, setScrollState] = createSignal(0);
+  const [scrollXState, setScrollXState] = createSignal(0);
+  const [scrollYState, setScrollYState] = createSignal(0);
 
-  const [list, setList] = createSignal([]);
+  const [rows, setRows] = createSignal<Partial<GridItemProps>[]>([]);
+  const [columns, setColumns] = createSignal<Partial<GridItemProps>[]>([]);
 
   createEffect(() => {
-    const window = Utils.getWindowSize(scrollState(), windowSize, itemSize);
+    const verticalWindow = Utils.getWindowSize(scrollXState(), rowWindowSize, rowSize);
     const windowItems = Utils.getWindowItems({
-      window,
+      window: verticalWindow,
       overscanCount,
-      itemCount,
-      itemSize,
+      itemCount: rowCount,
+      itemSize: rowSize,
+      getItem: (index: number, itemSize: number) => {
+        return {
+          rowIndex: index,
+          style: {
+            height: Utils.wrapPx(itemSize),
+            position: "absolute",
+            top: Utils.wrapPx((index + 1) * itemSize),
+          },
+        } as Partial<GridItemProps>;
+      }
     });
-    setList(windowItems);
+    setRows(windowItems);
+  });
+
+  createEffect(() => {
+    const horizontalWindow = Utils.getWindowSize(scrollYState(), colWindowSize, columnSize);
+    const windowItems = Utils.getWindowItems({
+      window: horizontalWindow,
+      overscanCount,
+      itemCount: columnCount,
+      itemSize: columnSize,
+      getItem: (index: number, itemSize: number) => {
+        return {
+          columnIndex: index,
+          style: {
+            width: Utils.wrapPx(itemSize),
+            position: "absolute",
+            left: Utils.wrapPx((index + 1) * itemSize),
+          },
+        } as Partial<GridItemProps>;
+      }
+    });
+    setColumns(windowItems);
   });
 
   const handleScroll: JSX.EventHandlerUnion<HTMLDivElement, UIEvent> = (
     event
   ) => {
-    setScrollState(event.target.scrollTop);
+    setScrollXState(event.target.scrollTop);
+    setScrollYState(event.target.scrollLeft);
   };
 
   return (
@@ -45,11 +82,18 @@ const FixedGridRenderer: Component<ListRendererProps> = ({
     >
       <div
         style={{
-          "min-height": Utils.wrapPx(itemSize * itemCount),
+          "min-height": Utils.wrapPx(rowSize * rowCount),
+          "min-width": Utils.wrapPx(columnSize * columnCount),
         }}
       >
-        <For each={list()} fallback={<div>Loading...</div>}>
-          {Renderer}
+        <For each={rows()} fallback={<div>Loading...</div>}>
+          {row => <For each={columns()} fallback={<div>Loading...</div>}>
+            {column => {
+              const style = { ...row.style, ...column.style } as GridItemProps;
+              return <Renderer rowIndex={row.rowIndex} columnIndex={column.columnIndex} style={style} />
+            }}
+          </For>}
+
         </For>
       </div>
     </div>

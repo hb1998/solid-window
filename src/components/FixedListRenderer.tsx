@@ -1,12 +1,12 @@
 import { Component, createEffect, createSignal, For, JSX } from "solid-js";
 import styles from "../App.module.css";
-import { ListRendererProps } from "../types/Render.types";
+import { ListItemProps, ListRendererProps } from "../types/Render.types";
 import Utils from "../utils";
 
 const FixedListRenderer: Component<ListRendererProps> = ({
   height,
   itemCount,
-  itemSize,
+  rowCount: itemSize,
   width,
   renderer: Renderer,
   overscanCount = 1,
@@ -24,7 +24,18 @@ const FixedListRenderer: Component<ListRendererProps> = ({
       overscanCount,
       itemCount,
       itemSize,
-    });
+      getItem: (index: number, itemSize: number) => {
+        return {
+            rowIndex: index,
+            style: {
+              height: Utils.wrapPx(itemSize),
+              width: "100%",
+              position: "absolute",
+              top: Utils.wrapPx((index + 1) * itemSize),
+            },
+          } as ListItemProps;
+      }
+    }, );
     setList(windowItems);
   });
 

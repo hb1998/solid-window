@@ -21,7 +21,7 @@ const VariableListRenderer: Component<VariableListRendererProps> = ({
   const rowHeightMeta: TItemSizeMetadata = new Map();
   
   createEffect(() => {
-    const window = Utils.getVariableWindowSize(scrollState(), itemSize);
+    const window = Utils.getVariableWindowSize(scrollState());
     const windowItems = Utils.getWindowItems({
       window,
       overscanCount,
